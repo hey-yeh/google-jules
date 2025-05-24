@@ -1,6 +1,24 @@
-Prompt 1:
+Prompt 1 at Saturday, May 24, 2025 - 3:02 PM:
 
+Let's make a game with Phaser.io and Typescript.
 
+All our games will be stored in the games/ folder, which doesn't yet exist. The first game will be game #1, which will be stored in games/1/
+
+Let's start with a simple wrapper for a simple hello world Phaser project:
+* games/1/ contains index.html
+* games/1/ contains game.ts which is compiled to game.js. For simplicity, let's keep the built JS files alongside the TS files. This is a super simple game.
+* index.html
+  - Responsive webpage that works for iOS/Android and also desktop web.
+  - The phaser game will take up 100% width and 100% height of the page. 
+  - The page background is #222222.
+* game.ts
+  - This game is simple. It presents four shapes on screen in a 2 x 2 grid and randomized order (square, triangle, star, circle).
+  - Text at the top tells the player what to tap. For example: "SQUARE" or "NOT CIRCLE"
+  - The player needs to follow the directions. If the player is wrong, he/she fails the game and it's game over.
+  - Upon game over, a dialog pops up that shows how many we got correct, and a button to try again.
+  - Note: when it says "NOT TRIANGLE", the player can tap any of the other three shapes and it's ok.
+
+That's it!
 
 
 Response from Jules:
