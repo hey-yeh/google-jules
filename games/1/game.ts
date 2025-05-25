@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+/// <reference types="phaser" />
 
 class MainScene extends Phaser.Scene {
     score: number;
