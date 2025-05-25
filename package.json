@@ -6,6 +6,6 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/tsc -p games/1/tsconfig.json",
-    "start": "http-server games/1/ -o"
+    "start": "npx http-server games/1/ -o"
   }
 }
