@@ -1,14 +1,15 @@
 {
     "compilerOptions": {
         "target": "es6",
-        "module": "commonjs",
+        "module": "amd",
         "outDir": "./", 
         "rootDir": "./", 
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true, 
         "forceConsistentCasingInFileNames": true,
-        "resolveJsonModule": true 
+        "resolveJsonModule": true,
+        "moduleResolution": "node"
     },
     "include": [
         "*.ts" 
