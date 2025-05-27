@@ -156,24 +156,25 @@
 
             if (guessButton) {
                 guessButton.addEventListener('click', () => {
-                    if (!guessInput || !game || !game.getState || !game.handleWordGuess || !game.handlePhraseGuess || !game.displayMessage) {
-                        console.error("Required game functions or input field not found.");
+                    if (!guessInput || !game || !game.submitGuess || !game.displayMessage) { // Ensure submitGuess is available
+                        console.error("Required game functions (submitGuess) or input field not found.");
+                        // Attempt to use displayMessage if available, otherwise alert
+                        if (game && game.displayMessage) {
+                            game.displayMessage("Error: Critical game function missing. Cannot submit guess.");
+                        } else {
+                            alert("Error: Critical game function missing.");
+                        }
                         return;
                     }
-                    const guessValue = guessInput.value.trim();
+                    const guessValue = guessInput.value.trim(); // trim here too
+                    // No need for if(!guessValue) check here if submitGuess handles it, but good for early exit
                     if (!guessValue) {
                         game.displayMessage("Please enter a word or phrase to guess.");
+                        guessInput.value = ""; // Clear input
                         return;
                     }
 
-                    const gameState = game.getState();
-                    if (gameState.gameOver) {
-                         game.displayMessage("The game is over. Start a new game.");
-                    } else if (gameState.wordGuessesLeft > 0) {
-                        game.handleWordGuess(guessValue);
-                    } else {
-                        game.handlePhraseGuess(guessValue);
-                    }
+                    game.submitGuess(guessValue); // Single call to the new dispatcher
                     guessInput.value = ""; // Clear input
                 });
             } else {

@@ -31,7 +31,7 @@ let gameWon = false;
 function updatePhraseDisplay() {
     // In a real scenario, this would update an HTML element.
     // For now, it can console.log or be called by other functions.
-    const displayString = hiddenPhrase.map(char => char === "SPACE_MARKER" ? "  " : char).join(" ");
+    const displayString = hiddenPhrase.map(char => char === "SPACE_MARKER" ? "    " : char).join(" "); // Changed to 4 spaces
     console.log("Phrase Display:", displayString);
     document.getElementById('phrase-display')!.textContent = displayString;
 }
@@ -73,15 +73,34 @@ function startGame() {
     console.log("Game started. Phrase: ", currentPhrase); // For debugging
 }
 
-function handleWordGuess(guessedWord: string) {
-    // New validation: Check for spaces in word guess
-    if (guessedWord.includes(' ')) {
-        displayMessage("Word guesses must be single words. Try guessing the full phrase if you know it, or enter one word to reveal letters.");
-        return; // Exit without processing or decrementing guesses
+// --- New Main Guess Handling Function ---
+function submitGuess(guessedWord: string) {
+    if (gameOver) {
+        displayMessage("The game is over. Please start a new game.");
+        return;
     }
 
-    // Existing logic follows
-    if (gameOver || wordGuessesLeft === 0) {
+    if (guessedWord.trim() === "") {
+        displayMessage("Please enter a guess.");
+        return;
+    }
+
+    if (guessedWord.includes(' ') || wordGuessesLeft === 0) {
+        // Treat as a phrase guess if it contains a space OR if no word guesses are left
+        if (phraseGuessesLeft > 0) {
+            handlePhraseGuess(guessedWord);
+        } else {
+            displayMessage("No phrase guesses left.");
+        }
+    } else {
+        // Treat as a word guess if it's a single word AND word guesses are left
+        handleWordGuess(guessedWord);
+    }
+}
+
+function handleWordGuess(guessedWord: string) {
+    // NOTE: Space check is now done in submitGuess
+    if (gameOver || wordGuessesLeft === 0) { // This check might be slightly redundant if submitGuess is perfect, but good for safety
         displayMessage("Cannot guess word. Game might be over or no word guesses left.");
         return;
     }
@@ -121,11 +140,11 @@ function handleWordGuess(guessedWord: string) {
 }
 
 function handlePhraseGuess(guessedPhrase: string) {
-    if (gameOver) {
+    if (gameOver) { // This check might be slightly redundant too
         displayMessage("Cannot guess phrase. Game is over.");
         return;
     }
-    if (phraseGuessesLeft === 0) {
+    if (phraseGuessesLeft === 0) { // Also potentially redundant
         displayMessage("No phrase guesses left.");
         return;
     }
@@ -185,8 +204,9 @@ function loseGame(message: string = "Game Over. You didn't guess the phrase.") {
 // Expose functions to be called from HTML
 (window as any).game = {
     startGame,
-    handleWordGuess,
-    handlePhraseGuess,
+    submitGuess, // New main entry point for guesses
+    handleWordGuess, // Keep for now
+    handlePhraseGuess, // Keep for now
     getState: () => ({
         currentPhrase,
         hiddenPhrase: hiddenPhrase.join(" "), // This is a string representation
