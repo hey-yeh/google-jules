@@ -179,15 +179,18 @@ function loseGame(message: string = "Game Over. You didn't guess the phrase.") {
     startGame,
     handleWordGuess,
     handlePhraseGuess,
-    // Expose state for debugging or simple UI updates if needed
     getState: () => ({
         currentPhrase,
-        hiddenPhrase: hiddenPhrase.join(" "),
+        hiddenPhrase: hiddenPhrase.join(" "), // This is a string representation
         wordGuessesLeft,
         phraseGuessesLeft,
         gameOver,
         gameWon
-    })
+    }),
+    // Expose UI update functions
+    displayMessage,
+    updatePhraseDisplay, // Though called internally, exposing it doesn't hurt
+    updateGuessesLeftDisplay // Same as above
 };
 
 // Initial call to set things up if this script were run directly.
