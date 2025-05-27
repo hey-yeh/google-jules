@@ -44,8 +44,10 @@
             border: 2px solid #dee2e6; /* Light grey border */
             background-color: #e9ecef; /* Very light grey background */
             text-align: center;
-            overflow-x: auto; 
-            white-space: pre; 
+            /* overflow-x: auto; (Removed for normal wrapping) */
+            white-space: normal;   /* Allows wrapping */
+            overflow-wrap: break-word; /* Breaks long words/underscores if they overflow */
+            line-height: 1.5;      /* Add some line height for multi-line phrases */
             color: #343a40; /* Darker shade for phrase text */
         }
         #guesses-left-display {
@@ -176,6 +178,29 @@
                 });
             } else {
                 console.error("Guess button not found.");
+            }
+
+            // Add keydown listener for 'Enter' key on the input field
+            if (guessInput) { // Ensure guessInput exists
+                guessInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault(); // Prevent default form submission if it were in a form
+                        // Simulate a click on the guessButton to reuse the existing logic
+                        // Ensure guessButton also exists before trying to click it
+                        const guessButtonElement = document.getElementById('guess-button'); // Renamed to avoid conflict with outer scope `guessButton`
+                        if (guessButtonElement) {
+                            guessButtonElement.click();
+                        } else {
+                            console.error("Guess button not found for Enter key press.");
+                            // Fallback or direct call to game logic if button is missing, though it shouldn't be
+                            // This part is tricky as the original click handler has its own checks.
+                            // For robustness, it's better if the core guess logic is a separate function
+                            // that both handlers can call. But for now, clicking the button is simplest.
+                        }
+                    }
+                });
+            } else {
+                console.error("Guess input field not found for adding keydown listener.");
             }
 
             if (newGameButton) {

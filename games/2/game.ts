@@ -74,6 +74,13 @@ function startGame() {
 }
 
 function handleWordGuess(guessedWord: string) {
+    // New validation: Check for spaces in word guess
+    if (guessedWord.includes(' ')) {
+        displayMessage("Word guesses must be single words. Try guessing the full phrase if you know it, or enter one word to reveal letters.");
+        return; // Exit without processing or decrementing guesses
+    }
+
+    // Existing logic follows
     if (gameOver || wordGuessesLeft === 0) {
         displayMessage("Cannot guess word. Game might be over or no word guesses left.");
         return;
