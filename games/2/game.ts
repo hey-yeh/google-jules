@@ -31,8 +31,9 @@ let gameWon = false;
 function updatePhraseDisplay() {
     // In a real scenario, this would update an HTML element.
     // For now, it can console.log or be called by other functions.
-    console.log("Phrase Display:", hiddenPhrase.join(" "));
-    document.getElementById('phrase-display')!.textContent = hiddenPhrase.join(" ");
+    const displayString = hiddenPhrase.map(char => char === "SPACE_MARKER" ? "  " : char).join(" ");
+    console.log("Phrase Display:", displayString);
+    document.getElementById('phrase-display')!.textContent = displayString;
 }
 
 function updateGuessesLeftDisplay() {
@@ -53,7 +54,7 @@ function selectNewPhrase(): string {
 }
 
 function initializeHiddenPhrase() {
-    hiddenPhrase = currentPhrase.split("").map(char => (char === " " ? " " : "_"));
+    hiddenPhrase = currentPhrase.split("").map(char => (char === " " ? "SPACE_MARKER" : "_"));
 }
 
 function startGame() {

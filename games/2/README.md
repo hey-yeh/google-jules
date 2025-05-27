@@ -7,3 +7,4 @@ Here are some ideas for future enhancements to the game:
 *   **Letter Frequency Display:** When a word is guessed, instead of just revealing the letters, also indicate how many times each of those guessed letters appears in the entire phrase. For example, if the phrase is "SUPER MARIO BROS" and the user guesses "MARIO", it reveals M, A, R, I, O and perhaps also indicates that 'R' appears twice in the full phrase.
 *   **Categories:** Allow selecting categories for phrases (e.g., "NES Games," "PlayStation Exclusives," "Indie Hits") to add variety.
 *   **Bonus for Full Word/Phrase Match Early:** If a player's word guess happens to be a full word in the phrase, or if they guess the whole phrase very early, they could get bonus points or an extra guess.
+*   **Dynamic Theme-Based Gradients:** Change the background gradient dynamically based on the theme of the secret game phrase (e.g., Mario's color scheme for "SUPER MARIO BROS", Sonic's for "SONIC THE HEDGEHOG").

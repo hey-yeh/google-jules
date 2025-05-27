@@ -8,57 +8,85 @@
         html, body {
             height: 100%;
             margin: 0;
-            padding: 20px; /* Added some padding */
-            background-color: #f0f0f0; /* Lightened background */
-            font-family: Arial, sans-serif; /* Added a default font */
-            display: flex; /* Using flex to center content */
+            padding: 20px; 
+            background-color: #f0f8ff; /* AliceBlue fallback */
+            background-image: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            font-family: Arial, sans-serif; 
+            color: #333; /* Dark grey default text */
+            display: flex; 
             flex-direction: column;
             align-items: center;
         }
-        #game-container { /* Added a container for better centering and structure */
+        #game-container { 
             width: 100%;
-            max-width: 600px; /* Max width for the game */
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
+            max-width: 700px; 
+            padding: 30px; 
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15); /* More pronounced shadow */
+            border-radius: 15px; /* More rounded */
+        }
+        h1 { /* Game Title Styling */
+            font-size: 2.8em;
+            margin-bottom: 30px;
+            text-align: center; 
+            color: #2c3e50; /* Dark slate blue */
+        }
+        p { /* General paragraph text color */
+            color: #495057;
         }
         /* Add more specific styles as needed for elements */
         #phrase-display {
             font-family: monospace;
-            font-size: 1.5em;
-            letter-spacing: 0.5em;
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
+            font-size: 2em; 
+            letter-spacing: 0.3em; 
+            margin-bottom: 25px; 
+            padding: 15px; 
+            border: 2px solid #dee2e6; /* Light grey border */
+            background-color: #e9ecef; /* Very light grey background */
             text-align: center;
+            overflow-x: auto; 
+            white-space: pre; 
+            color: #343a40; /* Darker shade for phrase text */
         }
         #guesses-left-display {
-            margin-bottom: 20px;
-            font-size: 1.1em;
+            margin-bottom: 25px; 
+            font-size: 1.3em; 
+            color: #495057; /* Softer dark grey */
         }
         #guess-input {
-            padding: 8px;
+            padding: 10px; 
             margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 2px solid #ced4da; /* Slightly more prominent border */
+            border-radius: 5px; /* Rounded */
+            font-size: 1.1em; 
+            /* Text color will be inherited or default to browser's dark for inputs */
         }
         button {
-            padding: 8px 15px;
-            background-color: #007bff;
+            padding: 12px 20px; 
+            background-color: #5cb85c; /* Pleasant green */
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px; /* Slightly rounded */
             cursor: pointer;
+            font-size: 1.1em; 
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #4cae4c; /* Slightly darker green */
         }
         #message-area {
-            margin-top: 20px;
+            margin-top: 25px; 
             font-weight: bold;
-            min-height: 20px; /* Ensure space for messages */
+            min-height: 30px; 
+            font-size: 1.1em; 
+            text-align: center; 
+            color: #495057; /* Softer dark grey */
+        }
+        /* Styles for section divs */
+        #game-container > div {
+            margin-bottom: 25px; /* Add margin to direct div children of game-container */
+        }
+        #game-container > div:last-child { /* Remove margin from the last div (message-area's wrapper) if message-area itself has margin-top */
+             margin-bottom: 0;
         }
     </style>
 </head>
@@ -66,30 +94,30 @@
     <div id="game-container"> <!-- Added game container -->
         <h1>Video Game Hangman!</h1>
 
-        <div>
+        <div> <!-- Wrapper for Phrase section -->
             <p>Phrase:</p>
             <div id="phrase-display">
                 <!-- Phrase will be displayed here by game.ts -->
             </div>
         </div>
 
-        <div>
+        <div> <!-- Wrapper for Guesses Left section -->
             <p>Guesses Left:</p>
             <div id="guesses-left-display">
                 <!-- Guesses left will be displayed here -->
             </div>
         </div>
 
-        <div>
+        <div> <!-- Wrapper for Input area -->
             <input type="text" id="guess-input" placeholder="Enter your guess">
             <button id="guess-button">Guess</button>
         </div>
 
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 30px; text-align: center;"> <!-- Increased margin-top and centered button -->
             <button id="new-game-button">New Game</button>
         </div>
 
-        <div id="message-area">
+        <div id="message-area"> <!-- Message area is already a direct child, its margin-top is handled by its own style -->
             <!-- Game messages will appear here -->
         </div>
     </div>
