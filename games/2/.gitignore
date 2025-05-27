@@ -1,0 +1,9 @@
+# Log files
+*.log
+
+# Compiled JavaScript files
+*.js
+*.js.map
+
+# Node modules (if any were added locally in games/2/, like by 'npm init -y' and 'npm install typescript')
+node_modules/

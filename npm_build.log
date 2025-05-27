@@ -1,0 +1,4 @@
+
+> build
+> for dir in games/*/; do if [ -f \"$dir/tsconfig.json\" ]; then (cd \"$dir\" && npx tsc); fi; done
+

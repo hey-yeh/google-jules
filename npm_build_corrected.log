@@ -1,0 +1,12 @@
+
+> build
+> for dir in games/*/; do echo "Processing directory: $dir"; (cd $dir && echo "Current dir for tsc: $(pwd)" && if [ -f tsconfig.json ]; then echo "Found tsconfig.json. Attempting to compile..."; npx tsc && echo "tsc command completed for $dir"; else echo "No tsconfig.json found in $(pwd)"; fi) || echo "Error processing directory $dir"; done
+
+Processing directory: games/1/
+Current dir for tsc: /app/games/1
+Found tsconfig.json. Attempting to compile...
+tsc command completed for games/1/
+Processing directory: games/2/
+Current dir for tsc: /app/games/2
+Found tsconfig.json. Attempting to compile...
+tsc command completed for games/2/

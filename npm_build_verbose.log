@@ -1,0 +1,8 @@
+
+> build
+> for dir in games/*/; do echo "Checking directory: $dir"; if [ -f \"$dir/tsconfig.json\" ]; then echo "Found tsconfig.json in $dir. Attempting to compile..."; (cd \"$dir\" && echo "Current dir for tsc: $(pwd)" && npx tsc && echo "tsc command completed for $dir") || echo "Error during tsc for $dir"; else echo "No tsconfig.json found in $dir"; fi; done
+
+Checking directory: games/1/
+No tsconfig.json found in games/1/
+Checking directory: games/2/
+No tsconfig.json found in games/2/

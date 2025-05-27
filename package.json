@@ -5,7 +5,7 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "build": "./node_modules/.bin/tsc -p games/1/tsconfig.json",
+    "build": "for dir in games/*/; do echo \"Processing directory: $dir\"; (cd $dir && echo \"Current dir for tsc: $(pwd)\" && if [ -f tsconfig.json ]; then echo \"Found tsconfig.json. Attempting to compile...\"; npx tsc && echo \"tsc command completed for $dir\"; else echo \"No tsconfig.json found in $(pwd)\"; fi) || echo \"Error processing directory $dir\"; done",
     "start": "npx http-server games/1/ -o"
   }
 }
