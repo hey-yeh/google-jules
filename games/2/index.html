@@ -3,27 +3,165 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
-    <title>Shape Clicker</title>
+    <title>Video Game Hangman</title> <!-- Changed title -->
     <style>
         html, body {
             height: 100%;
             margin: 0;
-            padding: 0;
-            background-color: #222222;
-            overflow: hidden; /* Prevent scrollbars */
-        }
-        #phaser-game-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
+            padding: 20px; /* Added some padding */
+            background-color: #f0f0f0; /* Lightened background */
+            font-family: Arial, sans-serif; /* Added a default font */
+            display: flex; /* Using flex to center content */
+            flex-direction: column;
             align-items: center;
+        }
+        #game-container { /* Added a container for better centering and structure */
+            width: 100%;
+            max-width: 600px; /* Max width for the game */
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        /* Add more specific styles as needed for elements */
+        #phrase-display {
+            font-family: monospace;
+            font-size: 1.5em;
+            letter-spacing: 0.5em;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        #guesses-left-display {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        #guess-input {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #message-area {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 20px; /* Ensure space for messages */
         }
     </style>
 </head>
 <body>
-    <div id="phaser-game-container"></div>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@v3.90.0/dist/phaser.js"></script>
+    <div id="game-container"> <!-- Added game container -->
+        <h1>Video Game Hangman!</h1>
+
+        <div>
+            <p>Phrase:</p>
+            <div id="phrase-display">
+                <!-- Phrase will be displayed here by game.ts -->
+            </div>
+        </div>
+
+        <div>
+            <p>Guesses Left:</p>
+            <div id="guesses-left-display">
+                <!-- Guesses left will be displayed here -->
+            </div>
+        </div>
+
+        <div>
+            <input type="text" id="guess-input" placeholder="Enter your guess">
+            <button id="guess-button">Guess</button>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button id="new-game-button">New Game</button>
+        </div>
+
+        <div id="message-area">
+            <!-- Game messages will appear here -->
+        </div>
+    </div>
+
     <script src="./game.js"></script>
+    <script>
+        // Initialize the game and set up event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Expose game functions from game.ts (they are attached to window.game)
+            const game = window.game;
+
+            if (game && game.startGame) {
+                // Initial UI text before game starts
+                document.getElementById('phrase-display').textContent = "Loading...";
+                document.getElementById('guesses-left-display').textContent = "Loading...";
+                document.getElementById('message-area').textContent = "Initializing game...";
+
+                game.startGame(); // Start the game once the DOM is loaded
+            } else {
+                console.error("Game logic not found. Ensure game.ts is compiled and included correctly.");
+                const messageArea = document.getElementById('message-area');
+                if (messageArea) {
+                    messageArea.textContent = "Error: Game logic could not be loaded. Ensure game.ts is compiled to game.js and included correctly.";
+                }
+                // Disable buttons if game can't load
+                document.getElementById('guess-button').disabled = true;
+                document.getElementById('new-game-button').disabled = true;
+                return;
+            }
+
+            const guessButton = document.getElementById('guess-button');
+            const guessInput = document.getElementById('guess-input');
+            const newGameButton = document.getElementById('new-game-button');
+
+            if (guessButton) {
+                guessButton.addEventListener('click', () => {
+                    if (!guessInput || !game || !game.getState || !game.handleWordGuess || !game.handlePhraseGuess || !game.displayMessage) {
+                        console.error("Required game functions or input field not found.");
+                        return;
+                    }
+                    const guessValue = guessInput.value.trim();
+                    if (!guessValue) {
+                        game.displayMessage("Please enter a word or phrase to guess.");
+                        return;
+                    }
+
+                    const gameState = game.getState();
+                    if (gameState.gameOver) {
+                         game.displayMessage("The game is over. Start a new game.");
+                    } else if (gameState.wordGuessesLeft > 0) {
+                        game.handleWordGuess(guessValue);
+                    } else {
+                        game.handlePhraseGuess(guessValue);
+                    }
+                    guessInput.value = ""; // Clear input
+                });
+            } else {
+                console.error("Guess button not found.");
+            }
+
+            if (newGameButton) {
+                newGameButton.addEventListener('click', () => {
+                    if (game && game.startGame) {
+                        game.startGame();
+                    } else {
+                        console.error("startGame function not found on game object.");
+                    }
+                });
+            } else {
+                console.error("New game button not found.");
+            }
+        });
+    </script>
 </body>
 </html>
