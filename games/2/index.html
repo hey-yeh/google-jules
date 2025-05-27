@@ -18,8 +18,8 @@
             align-items: center;
         }
         #game-container { 
-            width: 100%;
-            max-width: 700px; 
+            width: 66vw;           /* New width */
+            max-width: 800px;      /* Updated max-width */
             padding: 30px; 
             background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
             box-shadow: 0 8px 16px rgba(0,0,0,0.15); /* More pronounced shadow */
@@ -182,21 +182,19 @@
             }
 
             // Add keydown listener for 'Enter' key on the input field
-            if (guessInput) { // Ensure guessInput exists
+            if (guessInput) {
                 guessInput.addEventListener('keydown', (event) => {
                     if (event.key === 'Enter') {
-                        event.preventDefault(); // Prevent default form submission if it were in a form
-                        // Simulate a click on the guessButton to reuse the existing logic
-                        // Ensure guessButton also exists before trying to click it
-                        const guessButtonElement = document.getElementById('guess-button'); // Renamed to avoid conflict with outer scope `guessButton`
-                        if (guessButtonElement) {
-                            guessButtonElement.click();
-                        } else {
-                            console.error("Guess button not found for Enter key press.");
-                            // Fallback or direct call to game logic if button is missing, though it shouldn't be
-                            // This part is tricky as the original click handler has its own checks.
-                            // For robustness, it's better if the core guess logic is a separate function
-                            // that both handlers can call. But for now, clicking the button is simplest.
+                        event.preventDefault();
+                        const game = window.game; // get game object
+                        if (game && game.getState && !game.getState().gameOver) { // Check if game is NOT over
+                            const guessButtonElement = document.getElementById('guess-button'); // Use a different name to avoid conflict
+                            if (guessButtonElement) {
+                                guessButtonElement.click(); // This calls submitGuess via the button's handler
+                            }
+                        } else if (game && game.getState && game.getState().gameOver) {
+                            // If game is over and Enter is pressed in input, defer to global handler
+                            // No specific action here, or perhaps just blur the input: guessInput.blur();
                         }
                     }
                 });
@@ -215,6 +213,44 @@
             } else {
                 console.error("New game button not found.");
             }
+
+            // Add new global keydown listener for game over state
+            document.addEventListener('keydown', (event) => {
+                const game = window.game;
+                if (!game || !game.getState || !game.startGame || !game.activateNewGamePrompt || !game.isNewGamePromptActive) {
+                    // Game object or necessary functions not available
+                    return;
+                }
+
+                if (game.getState().gameOver) {
+                    if (event.key === 'Enter') {
+                        if (game.isNewGamePromptActive()) {
+                            game.startGame();
+                            // newGamePromptActive is reset within startGame()
+                        } else {
+                            game.activateNewGamePrompt();
+                        }
+                        event.preventDefault(); // Prevent any default Enter key behavior
+                    } else if (event.key === ' ' || event.code === 'Space') { // Check for Spacebar
+                        // Only activate prompt if not already active, to prevent re-triggering on multiple spaces
+                        if (!game.isNewGamePromptActive()) {
+                           game.activateNewGamePrompt();
+                        }
+                        event.preventDefault(); // Prevent space from scrolling or typing if input was focused
+                    } else if (event.key === 'Escape') { // Optional: Escape to cancel prompt
+                         if (game.isNewGamePromptActive() && game.deactivateNewGamePrompt) {
+                            game.deactivateNewGamePrompt();
+                            // Re-display the original game over message or a generic one
+                            const finalState = game.getState();
+                            if (finalState.gameWon) {
+                                game.displayMessage("Congratulations! You guessed the phrase! (Prompt cancelled)");
+                            } else {
+                                game.displayMessage("Game Over. You didn't guess the phrase. (Prompt cancelled)");
+                            }
+                         }
+                    }
+                }
+            });
         });
     </script>
 </body>

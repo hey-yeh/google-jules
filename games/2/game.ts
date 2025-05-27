@@ -22,6 +22,7 @@ let phraseGuessesLeft = MAX_PHRASE_GUESSES;
 let revealedLetters: Set<string> = new Set();
 let gameOver = false;
 let gameWon = false;
+let newGamePromptActive = false; // New state variable
 
 // --- HTML Element Placeholders (to be properly selected in main script) ---
 // These are conceptual. Actual DOM selection will happen in a main script
@@ -58,6 +59,7 @@ function initializeHiddenPhrase() {
 }
 
 function startGame() {
+    newGamePromptActive = false; // Reset prompt state at game start
     currentPhrase = selectNewPhrase();
     revealedLetters.clear();
     initializeHiddenPhrase();
@@ -71,6 +73,7 @@ function startGame() {
     updateGuessesLeftDisplay();
     displayMessage("New game started! Guess a word.");
     console.log("Game started. Phrase: ", currentPhrase); // For debugging
+    document.getElementById('guess-input')?.focus(); // Auto-focus the input field
 }
 
 // --- New Main Guess Handling Function ---
@@ -149,10 +152,13 @@ function handlePhraseGuess(guessedPhrase: string) {
         return;
     }
 
-    guessedPhrase = guessedPhrase.toUpperCase();
+    guessedPhrase = guessedPhrase.toUpperCase(); // ensure it's uppercase
     phraseGuessesLeft--;
 
-    if (guessedPhrase === currentPhrase) {
+    const processedGuessedPhrase = guessedPhrase.replace(/\s+/g, '');
+    const processedCurrentPhrase = currentPhrase.replace(/\s+/g, ''); // currentPhrase is already uppercase from startGame
+
+    if (processedGuessedPhrase === processedCurrentPhrase) {
         winGame();
     } else {
         updateGuessesLeftDisplay();
@@ -179,6 +185,23 @@ function loseGame(message: string = "Game Over. You didn't guess the phrase.") {
     // hiddenPhrase = currentPhrase.split("");
     // updatePhraseDisplay();
     displayMessage(message);
+}
+
+// --- New Game Prompt Functions ---
+function activateNewGamePrompt() {
+    newGamePromptActive = true;
+    displayMessage("Start a new game? (Press Enter to play again)");
+}
+
+function isNewGamePromptActive(): boolean {
+    return newGamePromptActive;
+}
+
+// This function might be useful to call from HTML if 'Escape' is used to cancel prompt
+function deactivateNewGamePrompt() {
+    newGamePromptActive = false;
+    // Optionally, display the original game over message again if needed
+    // For now, just deactivates. The next Enter/Space would re-trigger activateNewGamePrompt.
 }
 
 // --- Event Listener Setup (Conceptual) ---
@@ -213,12 +236,17 @@ function loseGame(message: string = "Game Over. You didn't guess the phrase.") {
         wordGuessesLeft,
         phraseGuessesLeft,
         gameOver,
-        gameWon
+        gameWon,
+        newGamePromptActive // Expose this state too if needed by HTML directly
     }),
     // Expose UI update functions
     displayMessage,
     updatePhraseDisplay, // Though called internally, exposing it doesn't hurt
-    updateGuessesLeftDisplay // Same as above
+    updateGuessesLeftDisplay, // Same as above
+    // New Game Prompt functions
+    activateNewGamePrompt,
+    isNewGamePromptActive,
+    deactivateNewGamePrompt
 };
 
 // Initial call to set things up if this script were run directly.
